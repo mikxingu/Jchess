@@ -1,6 +1,8 @@
 package chess;
 
 import boardgame.Board;
+import boardgame.Piece;
+import boardgame.Position;
 import chess.pieces.King;
 import chess.pieces.Rook;
 
@@ -13,6 +15,38 @@ public class ChessMatch {
 		initialSetup();
 	}
 	
+	public ChessPiece performChessMove(ChessPosition sourcePosition, ChessPosition targetPosition) {
+		Position source = sourcePosition.toPosition();
+		Position target = targetPosition.toPosition();
+		
+		validateSourcePosition(source);
+		Piece capturedPiece = makeMove(source, target);
+		
+		return (ChessPiece)capturedPiece;
+	}
+	
+	
+	private Piece makeMove(Position sourcePosition, Position targetPosition) {
+		Piece p = board.removePiece(sourcePosition);
+		Piece capturedPiece = board.removePiece(targetPosition);
+		
+		board.placePiece(p, targetPosition);
+		
+		return capturedPiece;
+	}
+	
+	
+	private void validateSourcePosition(Position position) {
+		if (!board.hasPiece(position)) {
+			throw new ChessException("There is no piece on source position");
+		}
+		
+		
+		
+
+		
+	}
+
 	private void placeNewPiece(char column, int row, ChessPiece piece) {
 		board.placePiece(piece, new ChessPosition(column, row).toPosition());
 	}
@@ -24,11 +58,11 @@ public class ChessMatch {
 			for (int j = 0; j < board.getColumns(); j++) {
 				//FORCA UM DOWNCASTING PARA CHESSPIECE, POIS A PARTIDA SO DEVE CONHECER CHESSPIECE E NAO BOARDGAME PIECE
 				matrix[i][j] = (ChessPiece) board.piece(i, j);
-
 			}
 		}
 		return matrix;
 	}
+	
 	
 	private void initialSetup() {
 		placeNewPiece('a', 1, new Rook(board, Color.WHITE));
