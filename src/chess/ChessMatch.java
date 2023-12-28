@@ -1,5 +1,8 @@
 package chess;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import boardgame.Board;
 import boardgame.Piece;
 import boardgame.Position;
@@ -11,6 +14,9 @@ public class ChessMatch {
 	private int turn;
 	private Color currentPlayer;
 	private Board board;
+	
+	private List<ChessPiece> capturedPieces = new ArrayList<>();
+	private List<ChessPiece> piecesOnBoard = new ArrayList<>() ;
 
 	public ChessMatch() {
 		board = new Board(8, 8);
@@ -48,6 +54,11 @@ public class ChessMatch {
 	private Piece makeMove(Position sourcePosition, Position targetPosition) {
 		Piece p = board.removePiece(sourcePosition);
 		Piece capturedPiece = board.removePiece(targetPosition);
+		
+		if (capturedPiece != null) {
+			piecesOnBoard.remove(capturedPiece);
+			capturedPieces.add((ChessPiece)capturedPiece);
+		}
 
 		board.placePiece(p, targetPosition);
 
@@ -77,6 +88,7 @@ public class ChessMatch {
 
 	private void placeNewPiece(char column, int row, ChessPiece piece) {
 		board.placePiece(piece, new ChessPosition(column, row).toPosition());
+		piecesOnBoard.add(piece);
 	}
 
 	public ChessPiece[][] getPieces() {
@@ -93,12 +105,22 @@ public class ChessMatch {
 	}
 
 	private void initialSetup() {
-		placeNewPiece('a', 1, new Rook(board, Color.WHITE));
-		placeNewPiece('b', 1, new Rook(board, Color.WHITE));
 		placeNewPiece('c', 1, new Rook(board, Color.WHITE));
 		placeNewPiece('d', 1, new King(board, Color.WHITE));
+		placeNewPiece('e', 1, new Rook(board, Color.WHITE));
+		placeNewPiece('c', 2, new Rook(board, Color.WHITE));
+		placeNewPiece('d', 2, new Rook(board, Color.WHITE));
+		placeNewPiece('e', 2, new Rook(board, Color.WHITE));
+		
+		placeNewPiece('c', 8, new Rook(board, Color.BLACK));
+		placeNewPiece('d', 8, new King(board, Color.BLACK));
+		placeNewPiece('e', 8, new Rook(board, Color.BLACK));
+		placeNewPiece('c', 7, new Rook(board, Color.BLACK));
+		placeNewPiece('d', 7, new Rook(board, Color.BLACK));
+		placeNewPiece('e', 7, new Rook(board, Color.BLACK));	
 	}
 
+	
 	private void nextTurn() {
 		turn++;
 		currentPlayer = (currentPlayer == Color.WHITE) ? Color.BLACK : Color.WHITE;
