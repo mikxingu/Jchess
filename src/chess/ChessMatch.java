@@ -1,5 +1,6 @@
 package chess;
 
+import java.security.InvalidParameterException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -22,6 +23,7 @@ public class ChessMatch {
 	private boolean check;
 	private boolean checkMate;
 	private ChessPiece enPassantVulnerable;
+	private ChessPiece promoted;
 
 	private List<ChessPiece> capturedPieces = new ArrayList<>();
 	private List<ChessPiece> piecesOnBoard = new ArrayList<>();
@@ -53,6 +55,10 @@ public class ChessMatch {
 		return enPassantVulnerable;
 	}
 
+	public ChessPiece getPromoted() {
+		return promoted;
+	}
+
 	public boolean[][] possibleMoves(ChessPosition sourcePosition) {
 		Position position = sourcePosition.toPosition();
 		validateSourcePosition(position);
@@ -75,6 +81,17 @@ public class ChessMatch {
 
 		ChessPiece movedPiece = (ChessPiece) board.piece(target);
 
+		// ## -- Special Move - Promotion -- ##
+		promoted = null;
+
+		if (movedPiece instanceof Pawn) {
+			if (movedPiece.getColor() == Color.WHITE && target.getRow() == 0
+					|| movedPiece.getColor() == Color.BLACK && target.getRow() == 7) {
+				promoted = (ChessPiece) board.piece(target);
+				promoted = replacePromotedChessPiece("Q");
+			}
+		}
+
 		check = (testCheck(opponent(currentPlayer))) ? true : false;
 
 		if (testCheckMate(opponent(currentPlayer))) {
@@ -94,6 +111,47 @@ public class ChessMatch {
 		}
 
 		return (ChessPiece) capturedPiece;
+	}
+
+	public ChessPiece replacePromotedChessPiece(String type) {
+		if (promoted == null) {
+			throw new IllegalStateException("There are no pieces to be promoted!");
+		}
+
+		if (!type.equals("B") && !type.equals("N") && !type.equals("R") && !type.equals("Q")) {
+			throw new InvalidParameterException("Invalid type for promotion");
+		}
+
+		Position pos = promoted.getChessPosition().toPosition();
+		Piece p = board.removePiece(pos);
+		piecesOnBoard.remove(p);
+
+		ChessPiece newPiece = newPiece(type, promoted.getColor());
+		
+		board.placePiece(newPiece, pos);
+		
+		piecesOnBoard.add(newPiece);
+		
+		return newPiece;
+
+	}
+
+	private ChessPiece newPiece(String type, Color color) {
+		switch (type) {
+
+		case "B":
+			return new Bishop(board, color);
+		case "N":
+			return new Knight(board, color);
+
+		case "R":
+			return new Rook(board, color);
+		case "Q":
+			return new Queen(board, color);
+
+		}
+
+		throw new IllegalStateException("Invalid type selected!");
 	}
 
 	private Piece makeMove(Position sourcePosition, Position targetPosition) {
