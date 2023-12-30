@@ -3,6 +3,12 @@ Projeto de jogo de xadrez Java via console desenvolvido durante o curso "Curso J
 
 Implementado a partir de documentação fornecida no curso. Foram praticados vários conceitos de programação orientada a objetos, como herança, polimorfismo, modificadores de acesso, tratamento de exceções, entre outros.
 
+### Como jogar ?
+
+1 - Clone o repositório do projeto.
+2 - Navegue até a pasta do bin projeto.
+3 - Inicie o programa com o comando <code>java application/Program</code>. **Atenção!** - Certifique-se de ter o Java 11 ou mais recente instalado em seu sistema!
+
 
 
 ### Imagens
