@@ -5,9 +5,13 @@ Implementado a partir de documentação fornecida no curso. Foram praticados vá
 
 ### Como jogar ?
 
-1 - Clone o repositório do projeto.
-2 - Navegue até a pasta do bin projeto.
-3 - Inicie o programa com o comando <code>java application/Program</code>. **Atenção!** - Certifique-se de ter o Java 11 ou mais recente instalado em seu sistema!
+- Navegue até a sessão Packages, faça o download do arquivo ".jar", execute o arquivo.
+
+#### ou
+
+- Clone o repositório do projeto.
+-  Navegue até a pasta do bin projeto.
+-  Inicie o programa com o comando <code>java application/Program</code>. **Atenção!** - Certifique-se de ter o Java 11 ou mais recente instalado em seu sistema!
 
 
 
